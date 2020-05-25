@@ -1,3 +1,18 @@
+import pygame as pg
+from pygame.locals import *
+from settings import *
+
+'''def draw_text(surface, text, size, x, y):
+    font_name = pg.font.match_font(FONT_NAME, False, False)
+    font = pg.font.Font(font_name, size)
+    text_surface = font.render(text, True, BLACK)
+    text_rect = text_surface.get_rect()
+    text_rect.x = x * TILE_SIZE
+    text_rect.y = y * TILE_SIZE
+    surface.blit(text_surface, text_rect)'''
+
+#pg.init()
+
 grid =   [[3, 0, 6, 5, 0, 8, 4, 0, 0], 
           [5, 2, 0, 0, 0, 0, 0, 0, 0], 
           [0, 8, 7, 0, 0, 0, 0, 3, 1], 
@@ -6,68 +21,79 @@ grid =   [[3, 0, 6, 5, 0, 8, 4, 0, 0],
           [0, 5, 0, 0, 9, 0, 6, 0, 0], 
           [1, 3, 0, 0, 0, 0, 2, 5, 0], 
           [0, 0, 0, 0, 0, 0, 0, 7, 4], 
-          [0, 0, 5, 2, 0, 6, 3, 0, 0]] 
+          [0, 0, 5, 2, 0, 6, 3, 0, 0]]
 
-def print_grid(grid): 
-    for(i) in range(9): 
-        for (j) in range(9): 
-            print(str(grid[i][j]) + " ", end="")
-        print('\n')
+#screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-def find_empty(grid):
 
-    for i in range(9):
-        for j in range(9):
-            if grid[i][j] == 0:
-                return i, j
-    return False
+class Solver:
 
-def is_valid(grid, row, col, num):
-    return valid_row(grid, row, num) and valid_col(grid, col, num) and valid_box(grid, row, col, num)
+    def __init__(self, grid):
+        self.grid = grid
 
-def valid_row(grid, row, num):
-    for i in range(9):
-        if grid[row][i] == num:
-            return False
-    return True
+    def find_empty(self):
+        for i in range(9):
+            for j in range(9):
+                if self.grid[i][j] == 0:
+                    return i, j
+        return False
 
-def valid_col(grid, col, num):
-    for i in range(9):
-        if grid[i][col] == num:
-            return False
-    return True
+    def is_valid(self, row, col, num):
+        return self.valid_row(row, num) and self.valid_col(col, num) and self.valid_box(row, col, num)
 
-def valid_box(grid, row, col, num):
-    for i in range(3):
-        for j in range(3):
-            row_check = i + (row - (row % 3))
-            col_check = j + (col - (col % 3))
-            if grid[row_check][col_check] == num:
+    def valid_row(self, row, num):
+        for i in range(9):
+            if self.grid[row][i] == num:
                 return False
-    return True
-
-def solve(grid):
-
-    indices = [0, 0]
-
-    if not find_empty(grid):
         return True
-    indices = find_empty(grid)
 
-    row = indices[0]
-    col = indices[1]
+    def valid_col(self, col, num):
+        for i in range(9):
+            if self.grid[i][col] == num:
+                return False
+        return True
+
+    def valid_box(self, row, col, num):
+        for i in range(3):
+            for j in range(3):
+                row_check = i + (row - (row % 3))
+                col_check = j + (col - (col % 3))
+                if self.grid[row_check][col_check] == num:
+                    return False
+        return True
+
+    def print_grid(self): 
+        for i in range(9): 
+            for j in range(9): 
+                print(str(self.grid[i][j]) + " ", end="")
+            print('\n')
+
+    def solve(self):
+
+        indices = [0, 0]
+
+        if not self.find_empty():
+            return True
+        indices = self.find_empty()
+
+        row = indices[0]
+        col = indices[1]
+
+        for i in range(1, 10):
+            if self.is_valid(row, col, i):
+                self.grid[row][col] = i
+                if self.solve():
+                    return True
+                self.grid[row][col] = 0
+        return False
 
 
-    for i in range(1, 10):
-        if is_valid(grid, row, col, i):
-            grid[row][col] = i
-            if solve(grid):
-                return True
-            grid[row][col] = 0
+def main():
+    solver = Solver(grid)
+    solver.solve()
+    solver.print_grid()
 
-    return False
-        
+main()
 
-solve(grid)
-print_grid(grid)
+
 
