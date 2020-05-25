@@ -2,17 +2,6 @@ import pygame as pg
 from pygame.locals import *
 from settings import *
 
-'''def draw_text(surface, text, size, x, y):
-    font_name = pg.font.match_font(FONT_NAME, False, False)
-    font = pg.font.Font(font_name, size)
-    text_surface = font.render(text, True, BLACK)
-    text_rect = text_surface.get_rect()
-    text_rect.x = x * TILE_SIZE
-    text_rect.y = y * TILE_SIZE
-    surface.blit(text_surface, text_rect)'''
-
-#pg.init()
-
 grid =   [[3, 0, 6, 5, 0, 8, 4, 0, 0], 
           [5, 2, 0, 0, 0, 0, 0, 0, 0], 
           [0, 8, 7, 0, 0, 0, 0, 3, 1], 
@@ -22,9 +11,6 @@ grid =   [[3, 0, 6, 5, 0, 8, 4, 0, 0],
           [1, 3, 0, 0, 0, 0, 2, 5, 0], 
           [0, 0, 0, 0, 0, 0, 0, 7, 4], 
           [0, 0, 5, 2, 0, 6, 3, 0, 0]]
-
-#screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
 
 class Solver:
 
